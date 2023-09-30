@@ -1,0 +1,685 @@
+group activeChannelCode thành 3 loại
+
+tại quầy(activeChannelCode: "COUNTER"), trực tuyến(activeChannelCode: "WEBSITE"), null(activeChannelCode: null)
+
+chia thành 3 phần:
+phần thứ 1 activeChannelName = Tại quầy, trong tại quầy chứa groupPermissionName = Tiền, Quyền hạn chế, Giao Dịch, Quyền cơ bản. Và chỉ render các object chứa thuộc tính activeChannelName = Tại quầy
+
+phần thứ 2 activeChannelName = Trực tuyến, trong tại quầy chứa groupPermissionName = Tiền, Quyền hạn chế, Giao Dịch, Quyền cơ bản. Và chỉ render các object chứa thuộc tính activeChannelName = Trực tuyến
+
+
+phần thứ 3 activeChannelName = null, Và chỉ render các object chứa thuộc tính activeChannelName = null
+
+
+// // Hàm để render activeChannelName và nội dung tương ứng
+function renderData(data) {
+  const groupedData = {};
+
+  // Lặp qua mỗi groupPermission
+  data.groupPermissions.forEach((group) => {
+    // Lặp qua mỗi permission trong groupPermission
+    group.permissions.forEach((permission) => {
+      const activeChannelName = permission.activeChannelName;
+      const groupPermissionName = group.groupPermissionName;
+
+      // Kiểm tra xem activeChannelName đã tồn tại trong đối tượng groupedData chưa
+      if (!groupedData[activeChannelName]) {
+        groupedData[activeChannelName] = {};
+      }
+
+      // Kiểm tra xem groupPermissionName đã tồn tại trong đối tượng groupedData[activeChannelName] chưa
+      if (!groupedData[activeChannelName][groupPermissionName]) {
+        groupedData[activeChannelName][groupPermissionName] = [];
+      }
+
+      // Thêm permission vào mảng tương ứng
+      groupedData[activeChannelName][groupPermissionName].push(permission);
+    });
+  });
+
+  // In activeChannelName trước
+  for (const activeChannelName in groupedData) {
+    console.log("Active Channel Name:", activeChannelName);
+
+    // Điều chỉnh hàm này để in nội dung theo yêu cầu
+    // Ví dụ: lặp qua groupedData[activeChannelName] và in nội dung
+  }
+}
+
+// Gọi hàm để render dữ liệu
+renderData(data);
+
+activeChannelName: Tại quầy => activeChannelCode: COUNTER
+activeChannelName: Trực tuyến => activeChannelCode: WEBSITE
+activeChannelName: null => activeChannelCode: null
+
+permissionGroup = [{
+    "groupPermissionCode": "EXCEPT",
+    "groupPermissionName": "Quyền hạn chế",
+    "permissions": [
+        {
+            "activeChannelCode": "COUNTER",
+            "activeChannelName": "Tại quầy",
+            "permissionCode": "FORBID_NOINSTRUMENTDEPOSIT",
+            "permissionName": "Không được phép lưu ký chứng khoán",
+            "editField": {
+                "isEditField": true,
+                "value": false
+            }
+        },
+        {
+            "activeChannelCode": "WEBSITE",
+            "activeChannelName": "Trực tuyến",
+            "permissionCode": "FORBID_NOINSTRUMENTDEPOSIT",
+            "permissionName": "Không được phép lưu ký chứng khoán",
+            "editField": {
+                "isEditField": true,
+                "value": false
+            }
+        },
+        {
+            "activeChannelCode": "COUNTER",
+            "activeChannelName": "Tại quầy",
+            "permissionCode": "FORBID_NOINSTRUMENTWITHDRAWAL",
+            "permissionName": "Không được phép rút/chuyển chứng khoán",
+            "editField": {
+                "isEditField": true,
+                "value": false
+            }
+        },
+        {
+            "activeChannelCode": "WEBSITE",
+            "activeChannelName": "Trực tuyến",
+            "permissionCode": "FORBID_NOINSTRUMENTWITHDRAWAL",
+            "permissionName": "Không được phép rút/chuyển chứng khoán",
+            "editField": {
+                "isEditField": true,
+                "value": false
+            }
+        },
+        {
+            "activeChannelCode": "COUNTER",
+            "activeChannelName": "Tại quầy",
+            "permissionCode": "FORBID_NOINTERNETTRADE",
+            "permissionName": "Không giao dịch trực tuyến",
+            "editField": {
+                "isEditField": true,
+                "value": false
+            }
+        },
+        {
+            "activeChannelCode": "WEBSITE",
+            "activeChannelName": "Trực tuyến",
+            "permissionCode": "FORBID_NOINTERNETTRADE",
+            "permissionName": "Không giao dịch trực tuyến",
+            "editField": {
+                "isEditField": true,
+                "value": false
+            }
+        }
+    ]
+}]
+
+
+const groupedData = _.groupBy(permissionGroup[0].permissions, (permission) => {
+  return `${permission.activeChannelName}:${permission.activeChannelCode}`;
+});
+
+// Điều chỉnh cấu trúc dữ liệu để có các khóa activeChannelName và activeChannelCode riêng
+const result = _.mapValues(groupedData, (permissions) => {
+  return _.map(permissions, (permission) => {
+    return {
+      activeChannelName: permission.activeChannelName,
+      activeChannelCode: permission.activeChannelCode,
+      permissionCode: permission.permissionCode,
+      permissionName: permission.permissionName,
+      editField: permission.editField,
+    };
+  });
+});
+
+// In kết quả
+console.log(result);
+Trong ví dụ này, chúng tôi sử dụng _.groupBy để nhóm các permission theo activeChannelName và activeChannelCode. Sau đó, chúng tôi sử dụng _.mapValues để điều chỉnh cấu trúc dữ liệu để có các khóa activeChannelName và activeChannelCode riêng trong kết quả cuối cùng.
+
+
+
+
+
+permissionGroup: object -> array, permissionGroup.map((permission)=> {
+    
+})
+
+1 obect chứa 3 mảng: COUNTER, WEBSITE, OTHER.
+
+Trong mảng COUNTER và Website chứa các object có từng groupPermissionCode là CASH, EXPECT, TRADDING, NORMAL.
+
+Làm sao để tạo ra các object tương ứng với groupPermissionCode
+
+newData là 1 object chứa 3 mảng COUNTER, WEBSITE, OTHER. Trong mảng COUNTER, WEBSITE, OTHER chứa các thuộc tính khác và thuộc tính groupPermissionCode là CASH, EXPECT, TRADDING, NORMAL. Làm sao để biến đổi 3 mảng COUNTER, WEBSITE, OTHER thành object và trong obect sẽ theo cặp key value tương ứng là CASH, EXPECT, TRADDING, NORMAL: nội dung tương ứng
+
+
+
+
+
+<Grid item xs={12}>
+                <Typography
+                  variant={"h5"}
+                  className={"text-uppercase"}
+                  style={{ marginTop: 10 }}
+                >
+                  QUYỀN HẠN CHẾ
+                </Typography>
+              </Grid>
+              {permissionGroup?.EXPECT?.map((x, idx) => {
+                return (
+                  <Grid item xs={6} md={3} key={idx}>
+                    <AppCheckBoxField
+                      id={x?.permissionCode}
+                      label={
+                        <p style={{ paddingTop: "9px" }}>{x?.permissionName}</p>
+                      }
+                      // className={"m-0"}
+                      name={`permission.groupPermissions.${idx}.permissions.${idx}.editField.value`}
+                      style={{ alignItems: "flex-start" }}
+                      onChangeState={(e) => {}}
+                      disabled={!x?.editField?.isEditField}
+                      // indeterminate={selectPermission}
+                      hasHighLight={isUpdateAccount}
+                      // hasHighLight
+                      requestChange={
+                        isHighlightAdd
+                          ? true
+                          : checkHighlightChange(
+                              apAccount?.accountPermissions?.[0]
+                                ?.groupPermissions,
+                              x?.permissionCode,
+                              x?.activeChannelCode
+                            )
+                      }
+                    />
+                  </Grid>
+                );
+              })}
+
+              <Grid item xs={12}>
+                <Typography
+                  variant={"h5"}
+                  className={"text-uppercase"}
+                  style={{ marginTop: 10 }}
+                >
+                  GIAO DỊCH
+                </Typography>
+              </Grid>
+              {permissionGroup?.TRADDING?.map((x, idx) => {
+                return (
+                  <Grid item xs={6} md={3} key={idx}>
+                    <AppCheckBoxField
+                      id={x?.permissionCode}
+                      label={
+                        <p style={{ paddingTop: "9px" }}>{x?.permissionName}</p>
+                      }
+                      // className={"m-0"}
+                      name={`permission.groupPermissions.${idx}.permissions.${idx}.editField.value`}
+                      style={{ alignItems: "flex-start" }}
+                      onChangeState={(e) => {}}
+                      disabled={!x?.editField?.isEditField}
+                      // indeterminate={selectPermission}
+                      hasHighLight={isUpdateAccount}
+                      // hasHighLight
+                      requestChange={
+                        isHighlightAdd
+                          ? true
+                          : checkHighlightChange(
+                              apAccount?.accountPermissions?.[0]
+                                ?.groupPermissions,
+                              x?.permissionCode,
+                              x?.activeChannelCode
+                            )
+                      }
+                    />
+                  </Grid>
+                );
+              })}
+
+              <Grid item xs={12}>
+                <Typography
+                  variant={"h5"}
+                  className={"text-uppercase"}
+                  style={{ marginTop: 10 }}
+                >
+                  QUYỀN CƠ BẢN
+                </Typography>
+              </Grid>
+              {permissionGroup?.NORMAL?.map((x, idx) => {
+                return (
+                  <Grid item xs={6} md={3} key={idx}>
+                    <AppCheckBoxField
+                      id={x?.permissionCode}
+                      label={
+                        <p style={{ paddingTop: "9px" }}>{x?.permissionName}</p>
+                      }
+                      // className={"m-0"}
+                      name={`permission.groupPermissions.${idx}.permissions.${idx}.editField.value`}
+                      style={{ alignItems: "flex-start" }}
+                      onChangeState={(e) => {}}
+                      disabled={!x?.editField?.isEditField}
+                      // indeterminate={selectPermission}
+                      hasHighLight={isUpdateAccount}
+                      // hasHighLight
+                      requestChange={
+                        isHighlightAdd
+                          ? true
+                          : checkHighlightChange(
+                              apAccount?.accountPermissions?.[0]
+                                ?.groupPermissions,
+                              x?.permissionCode,
+                              x?.activeChannelCode
+                            )
+                      }
+                    />
+                  </Grid>
+                );
+              })}
+
+
+
+
+const renderItem = {
+  COUNTER: {
+    CASH: [
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "EXECUTE_ALLOWDAYTRADING",
+        permissionName: "Cho phép day-trading",
+        editField: {
+          isEditField: true,
+          value: false,
+        },
+        groupPermissionCode: "CASH",
+        groupPermissionName: "Tiền ",
+      },
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "EXECUTE_CASHDEPOSIT",
+        permissionName: "Nộp tiền",
+        editField: {
+          isEditField: true,
+          value: true,
+        },
+        groupPermissionCode: "CASH",
+        groupPermissionName: "Tiền ",
+      },
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "EXECUTE_CASHWITHDRAWAL",
+        permissionName: "Rút tiền",
+        editField: {
+          isEditField: true,
+          value: true,
+        },
+        groupPermissionCode: "CASH",
+        groupPermissionName: "Tiền ",
+      },
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "EXECUTE_INTERNALTRANSFER",
+        permissionName: "Chuyển tiền nội bộ",
+        editField: {
+          isEditField: true,
+          value: true,
+        },
+        groupPermissionCode: "CASH",
+        groupPermissionName: "Tiền ",
+      },
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "EXECUTE_RIGHTSUBSCRIPTION",
+        permissionName: "Thực hiện quyền",
+        editField: {
+          isEditField: true,
+          value: true,
+        },
+        groupPermissionCode: "CASH",
+        groupPermissionName: "Tiền ",
+      },
+    ],
+    EXCEPT: [
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "FORBID_NOINSTRUMENTDEPOSIT",
+        permissionName: "Không được phép lưu ký chứng khoán",
+        editField: {
+          isEditField: true,
+          value: false,
+        },
+        groupPermissionCode: "EXCEPT",
+        groupPermissionName: "Quyền hạn chế",
+      },
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "FORBID_NOINSTRUMENTWITHDRAWAL",
+        permissionName: "Không được phép rút/chuyển chứng khoán",
+        editField: {
+          isEditField: true,
+          value: false,
+        },
+        groupPermissionCode: "EXCEPT",
+        groupPermissionName: "Quyền hạn chế",
+      },
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "FORBID_NOINTERNETTRADE",
+        permissionName: "Không giao dịch trực tuyến",
+        editField: {
+          isEditField: true,
+          value: false,
+        },
+        groupPermissionCode: "EXCEPT",
+        groupPermissionName: "Quyền hạn chế",
+      },
+    ],
+    TRADING: [
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "EXECUTE_BUYONLY",
+        permissionName: "Chỉ được mua",
+        editField: {
+          isEditField: true,
+          value: false,
+        },
+        groupPermissionCode: "TRADING",
+        groupPermissionName: "Giao dịch",
+      },
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "EXECUTE_SELLONLY",
+        permissionName: "Chỉ được bán",
+        editField: {
+          isEditField: true,
+          value: false,
+        },
+        groupPermissionCode: "TRADING",
+        groupPermissionName: "Giao dịch",
+      },
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "EXECUTE_TRADING",
+        permissionName: "Quyền giao dịch",
+        editField: {
+          isEditField: true,
+          value: true,
+        },
+        groupPermissionCode: "TRADING",
+        groupPermissionName: "Giao dịch",
+      },
+    ],
+    NORMAL: [
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "VIEW_ACCOUNTBALANCE",
+        permissionName: "Xem số dư tài khoản",
+        editField: {
+          isEditField: false,
+          value: true,
+        },
+        groupPermissionCode: "NORMAL",
+        groupPermissionName: "Quyền cơ bản",
+      },
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "VIEW_MARGIN",
+        permissionName: "Xem Trạng thái ký quỹ",
+        editField: {
+          isEditField: false,
+          value: true,
+        },
+        groupPermissionCode: "NORMAL",
+        groupPermissionName: "Quyền cơ bản",
+      },
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "VIEW_PROFITANDLOSS",
+        permissionName: "Xem lãi/lỗ danh mục",
+        editField: {
+          isEditField: false,
+          value: true,
+        },
+        groupPermissionCode: "NORMAL",
+        groupPermissionName: "Quyền cơ bản",
+      },
+      {
+        activeChannelCode: "COUNTER",
+        activeChannelName: "Tại quầy",
+        permissionCode: "VIEW_TRANSACTIONSTATEMENT",
+        permissionName: "Xem sao kê giao dịch",
+        editField: {
+          isEditField: false,
+          value: true,
+        },
+        groupPermissionCode: "NORMAL",
+        groupPermissionName: "Quyền cơ bản",
+      },
+    ],
+  },
+  WEBSITE: {
+    CASH: [
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "EXECUTE_ALLOWDAYTRADING",
+        permissionName: "Cho phép day-trading",
+        editField: {
+          isEditField: true,
+          value: false,
+        },
+        groupPermissionCode: "CASH",
+        groupPermissionName: "Tiền ",
+      },
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "EXECUTE_CASHDEPOSIT",
+        permissionName: "Nộp tiền",
+        editField: {
+          isEditField: true,
+          value: true,
+        },
+        groupPermissionCode: "CASH",
+        groupPermissionName: "Tiền ",
+      },
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "EXECUTE_CASHWITHDRAWAL",
+        permissionName: "Rút tiền",
+        editField: {
+          isEditField: true,
+          value: true,
+        },
+        groupPermissionCode: "CASH",
+        groupPermissionName: "Tiền ",
+      },
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "EXECUTE_INTERNALTRANSFER",
+        permissionName: "Chuyển tiền nội bộ",
+        editField: {
+          isEditField: true,
+          value: true,
+        },
+        groupPermissionCode: "CASH",
+        groupPermissionName: "Tiền ",
+      },
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "EXECUTE_RIGHTSUBSCRIPTION",
+        permissionName: "Thực hiện quyền",
+        editField: {
+          isEditField: true,
+          value: true,
+        },
+        groupPermissionCode: "CASH",
+        groupPermissionName: "Tiền ",
+      },
+    ],
+    EXCEPT: [
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "FORBID_NOINSTRUMENTDEPOSIT",
+        permissionName: "Không được phép lưu ký chứng khoán",
+        editField: {
+          isEditField: true,
+          value: false,
+        },
+        groupPermissionCode: "EXCEPT",
+        groupPermissionName: "Quyền hạn chế",
+      },
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "FORBID_NOINSTRUMENTWITHDRAWAL",
+        permissionName: "Không được phép rút/chuyển chứng khoán",
+        editField: {
+          isEditField: true,
+          value: false,
+        },
+        groupPermissionCode: "EXCEPT",
+        groupPermissionName: "Quyền hạn chế",
+      },
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "FORBID_NOINTERNETTRADE",
+        permissionName: "Không giao dịch trực tuyến",
+        editField: {
+          isEditField: true,
+          value: false,
+        },
+        groupPermissionCode: "EXCEPT",
+        groupPermissionName: "Quyền hạn chế",
+      },
+    ],
+    TRADING: [
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "EXECUTE_BUYONLY",
+        permissionName: "Chỉ được mua",
+        editField: {
+          isEditField: true,
+          value: false,
+        },
+        groupPermissionCode: "TRADING",
+        groupPermissionName: "Giao dịch",
+      },
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "EXECUTE_SELLONLY",
+        permissionName: "Chỉ được bán",
+        editField: {
+          isEditField: true,
+          value: false,
+        },
+        groupPermissionCode: "TRADING",
+        groupPermissionName: "Giao dịch",
+      },
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "EXECUTE_TRADING",
+        permissionName: "Quyền giao dịch",
+        editField: {
+          isEditField: true,
+          value: true,
+        },
+        groupPermissionCode: "TRADING",
+        groupPermissionName: "Giao dịch",
+      },
+    ],
+    NORMAL: [
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "VIEW_ACCOUNTBALANCE",
+        permissionName: "Xem số dư tài khoản",
+        editField: {
+          isEditField: false,
+          value: true,
+        },
+        groupPermissionCode: "NORMAL",
+        groupPermissionName: "Quyền cơ bản",
+      },
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "VIEW_MARGIN",
+        permissionName: "Xem Trạng thái ký quỹ",
+        editField: {
+          isEditField: false,
+          value: true,
+        },
+        groupPermissionCode: "NORMAL",
+        groupPermissionName: "Quyền cơ bản",
+      },
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "VIEW_PROFITANDLOSS",
+        permissionName: "Xem lãi/lỗ danh mục",
+        editField: {
+          isEditField: false,
+          value: true,
+        },
+        groupPermissionCode: "NORMAL",
+        groupPermissionName: "Quyền cơ bản",
+      },
+      {
+        activeChannelCode: "WEBSITE",
+        activeChannelName: "Trực tuyến",
+        permissionCode: "VIEW_TRANSACTIONSTATEMENT",
+        permissionName: "Xem sao kê giao dịch",
+        editField: {
+          isEditField: false,
+          value: true,
+        },
+        groupPermissionCode: "NORMAL",
+        groupPermissionName: "Quyền cơ bản",
+      },
+    ],
+  },
+  OTHER: {
+    CASH: [
+      {
+        activeChannelCode: "OTHER",
+        activeChannelName: "Khác",
+        permissionCode: "EXECUTE_FORCESELL",
+        permissionName: "Bán giải chấp",
+        editField: {
+          isEditField: true,
+          value: true,
+        },
+        groupPermissionCode: "CASH",
+        groupPermissionName: "Tiền ",
+      },
+    ],
+  },
+};
